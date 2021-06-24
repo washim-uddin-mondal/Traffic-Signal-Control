@@ -3,7 +3,7 @@
 Two interdependent intersections are considered. 
 
 
-Change clip_grad_value according to the experiment.
+Change clip_grad_value and scaling according to the experiment.
 
 # Run experiments
 
