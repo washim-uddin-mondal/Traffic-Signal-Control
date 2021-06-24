@@ -39,10 +39,10 @@ def train(args):
         curr_state = env.states.clone().detach()
         # It is important to clone, otherwise it'll pass a pointer
 
-        args.explore_prob = max(args.explore_prob*torch.exp(-0.00005*torch.tensor(iter_count)), 0.05)
+        # args.explore_prob = max(args.explore_prob*torch.exp(-0.00005*torch.tensor(iter_count)), 0.05)
         # Exponential decay of exploration probability helps in stabilization.
 
-        if random.uniform(0, 1) < args.explore_prob:
+        if random.uniform(0, 1) < args.explore_prob or iter_count < args.explr_period:
             curr_phase0 = torch.randint(0, 2, [1])
             curr_phase1 = torch.randint(0, 2, [1])
         else:
