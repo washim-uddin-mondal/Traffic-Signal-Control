@@ -18,6 +18,10 @@ python3 Main.py -a IQL -i 100000 -l 3 -w 3 -r 20\
 python3 Main.py -a VDN -i 100000 -l 3 -w 3 -r 20\
 python3 Main.py -a QMIX -i 100000 -s 1000 -l 3 -w 3 -r 20
 
+# Caution
+
+Before running a fresh set of experiments, make sure Results folder (if any) is empty. Otherwise results might be corrupted.
+
 # Display results
 
 python3 Main.py -d TrainNet3x3\
