@@ -142,7 +142,7 @@ def evaluate(args):
             print(f'Model ' + filename + f'{index}.pkl does not exist.')
 
     env = GridNet(args)
-    MeanQ = 0
+    MeanQ = torch.tensor([0.])
     MeanQVec = torch.tensor([])
 
     curr_state = torch.zeros([IntersectionN, 6])
