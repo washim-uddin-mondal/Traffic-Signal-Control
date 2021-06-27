@@ -50,6 +50,7 @@ def train(args):
         # It is important to clone, otherwise it'll pass a pointer
 
         for index in range(IntersectionN):
+
             # Phase update
             if curr_state[index, 5] < args.min_phase_time:
                 next_state[index, 4] = curr_state[index, 4]
@@ -59,7 +60,7 @@ def train(args):
                 else:
                     next_state[index, 4] = torch.argmin(main_nets[index](curr_state[index, :]))
             else:
-                next_state[index, 4] = (1 + curr_state[index, 4]) % 2
+                next_state[index, 4] = ((1 + curr_state[index, 4]) % 2)
 
             # Phase time update
             if curr_state[index, 4] == next_state[index, 4]:
@@ -86,7 +87,7 @@ def train(args):
         replay_memory.append([curr_state.clone(), next_state.clone(), cost/args.scaling])
         # It is important to clone, otherwise only a pointer will stored
 
-        curr_state = next_state     # State update for next iteration
+        curr_state[:, 4:] = next_state[:, 4:]     # State update for next iteration
 
         if batch_size < len(replay_memory):
             batch_samples = random.sample(replay_memory, batch_size)
@@ -171,7 +172,7 @@ def evaluate(args):
         next_state[:, :4] = env.Qs.clone().reshape(-1, 4)
         MeanQ += (torch.sum(next_state[:, :4]) / IntersectionN - MeanQ) / (iter_count + 1)
         MeanQVec = torch.cat((MeanQVec, MeanQ))
-        curr_state = next_state
+        curr_state[:, 4:] = next_state[:, 4:]
 
     print(filename + f": Mean queue after evaluation is: {MeanQ}")
     SaveResults(MeanQVec, f'EvalNet{args.length}x{args.width}Lambda{args.arr_rates[0]}' + filename)

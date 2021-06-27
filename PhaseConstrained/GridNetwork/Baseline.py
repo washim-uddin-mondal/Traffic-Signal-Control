@@ -40,6 +40,6 @@ def evaluate(args):
         next_state[:, :4] = env.Qs.clone().reshape(-1, 4)
 
         MeanQ += (torch.sum(next_state[:, :4])/IntersectionN - MeanQ) / (iter_count + 1)
-        curr_state = next_state
+        curr_state[:, 4:] = next_state[:, 4:]
 
     print(f"Baseline: Mean queue after evaluation is: {MeanQ}")
