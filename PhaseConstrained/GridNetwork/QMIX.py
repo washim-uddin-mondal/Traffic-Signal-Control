@@ -89,7 +89,7 @@ def train(args):
         if iter_count % args.display_interval == 0:
             MeanQVec = torch.cat((MeanQVec, MeanQ))
 
-        replay_memory.append([curr_state.clone(), next_state.clone(), cost])
+        replay_memory.append([curr_state.clone(), next_state.clone(), cost/IntersectionN])
         # It is important to clone, otherwise only a pointer will stored
 
         curr_state[:, 4:] = next_state[:, 4:]  # State update for next iteration
@@ -128,12 +128,15 @@ def train(args):
 
             optimizer.zero_grad()
             loss.backward()
+            torch.nn.utils.clip_grad_value_(optim_par, args.clip_grad_value)
             optimizer.step()
 
         if iter_count % args.update_cycle == 0:
             for index in range(IntersectionN):
                 target_nets[index].load_state_dict(main_nets[index].state_dict())
             print(filename + f": Iteration:{iter_count + 1} and mean queue length: {MeanQ}")
+        if iter_count % args.update_cycle_mix == 0:
+            qmix_net_target.load_state_dict(qmix_net_main.state_dict())
 
     SaveModels(main_nets, filename)
     SaveResults(MeanQVec, f'TrainNet{args.length}x{args.width}Lambda{args.arr_rates[0]}' + filename)
